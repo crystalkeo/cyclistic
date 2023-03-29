@@ -155,6 +155,10 @@ JOIN
 Q2.membership_type = Q1_23.membership_type
 ```
 
+![Sheet 3 (1)](https://user-images.githubusercontent.com/128414862/228644266-84fc9dd4-0f7f-4a5d-b562-a24878ec6790.png)
+
+
+
 **Peak days**
 
 Now that we know average ride time, which days do riders prefer the most? 
@@ -194,6 +198,9 @@ CASE
    ```
    
  > Note: Repeat for each quarter
+ 
+ ![Dashboard 1](https://user-images.githubusercontent.com/128414862/228640151-f7f3a922-3188-43d2-875b-d14d2b7d68b9.png)
+
 
 ### Insights 
 Revisiting the business task: How do annual members and casual riders use Cyclistic bikes differently?
