@@ -1,0 +1,34 @@
+-- Rider total for each days rode
+
+SELECT
+  day_of_week,
+  count(CASE WHEN member_casual = 'casual' THEN 1 ELSE null END) AS casual_members,
+  count(CASE WHEN member_casual = 'member' THEN 1 ELSE null END) AS annual_members
+FROM
+  (SELECT
+    member_casual,
+    CASE 
+    WHEN day_of_week = 1 THEN 'Sunday'
+    WHEN day_of_week = 2 THEN 'Monday'
+    WHEN day_of_week = 3 THEN 'Tuesday'
+    WHEN day_of_week = 4 THEN 'Wednesday'
+    WHEN day_of_week = 5 THEN 'Thursday'
+    WHEN day_of_week = 6 THEN 'Friday'
+    WHEN day_of_week = 7 THEN 'Saturday'
+    END AS day_of_week
+  FROM
+    `projects-381620.tripdata.quarter_2`
+  )
+GROUP BY
+  day_of_week 
+ORDER BY
+CASE
+    WHEN day_of_week = 'Sunday' THEN 1
+    WHEN day_of_week = 'Monday' THEN 2
+    WHEN day_of_week = 'Tuesday' THEN 3
+    WHEN day_of_week = 'Wednesday' THEN 4
+    WHEN day_of_week = 'Thursday' THEN 5
+    WHEN day_of_week = 'Friday' THEN 6
+    WHEN day_of_week = 'Saturday' THEN 7
+    END ASC
+  
