@@ -128,6 +128,9 @@ ORDER BY
 
 ```
 
+![general_stats](https://user-images.githubusercontent.com/128414862/228647524-4ba1ef36-653b-4811-9a67-0193939f2c7d.PNG)
+
+
 **Calculate average ride time of casual and annual membership riders**
 
 Create queries to determine the average ride time per quarter of casual, annual, and all members. 
