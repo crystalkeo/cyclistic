@@ -17,6 +17,7 @@ Data Source: Bike data is provided by [Motivate International Inc.](https://divv
 
 ----
 ### Preparing and Cleaning Data
+
 The next step in this process is to properly prepare and clean data in preparation for analysis. After downloading and unzipping the 12 files, store the .CSV files in appropriate folders. Import each file into Google Sheets to add two columns: ride_length and day_of_week. Following these steps:
 - Download data and store data appropriately on device
 - Split .CSV files if file size is greater than 100,000 KB. Google Sheets cannot store files that exceed a limit
@@ -32,6 +33,7 @@ The next step in this process is to properly prepare and clean data in preparati
 ----
 
 ### Data processing with SQL BigQuery
+
 After preparing, cleaning, and processing data on Google Sheets, use SQL BigQuery to perform further processing, aggregation, and analysis. 
 
 To continue working on the data, upload the large datasets to BigQuery’s Google Cloud bucket. Importing the files directly to BigQuery can cause errors due to file size exceeding the limit for upload. 
@@ -44,12 +46,12 @@ Create tables for each month and combine the tables into quarters for easier pro
 
 > Note: The data sources downloaded are from the previous 12 months and may contain incomplete quarters. Q1-2022 only contains data from March 2022 and Q1-2023 only contains data from January 2023 and February 2023. 
 
-Querying rides per quarter
 After combining the months into Quarters, use the count function to determine how many distinct rides there were per quarter. 
 
 ### Explore differences of casual vs. annual members
 
 **Percentage of casual riders vs. annual members**
+
 1. Create a nested query to perform a **COUNTIF** function to identify members with the values of ‘casual’ or ‘member’ and create an alias as casual_members or annual_members. Perform another **COUNT** function to determine total trips that members have taken. 
 2. Create an outer query to calculate the percentage of casual and annual members that make up the total trips per quarter. Use UNION ALL to combine results from different quarters together, creating a comprehensive statistics of riders and ORDER BY quarter.
 
@@ -154,6 +156,7 @@ Q2.membership_type = Q1_23.membership_type
 ```
 
 **Peak days**
+
 Now that we know average ride time, which days do riders prefer the most? 
 
 ```
@@ -193,7 +196,7 @@ CASE
  > Note: Repeat for each quarter
 
 ### Insights 
-After further analysis, insights and recommendations can be provided. Revisiting the business task: How do annual members and casual riders use Cyclistic bikes differently?
+Revisiting the business task: How do annual members and casual riders use Cyclistic bikes differently?
 
 
 - There is a peak in casual riders who use Cyclistic bikeshare during Spring and Summer months (Q2-Q3)
@@ -206,19 +209,24 @@ After further analysis, insights and recommendations can be provided. Revisiting
 ### Recommendations
 
 1. Spring/Summer promotion
-I would recommend Cyclistic to really leverage their campaigns and promotional activities during Spring and Summer months to attract the interest of casual riders. It would be wise to utilize social media to create engaging content that will appeal to casual riders. Social media content can include:
- - The many benefits of bike sharing 
- - Health outcomes
- - Cyclisitc challenges and group activities
- - Discounted prices
+
+Cyclistic has an opportunity to attract casual riders by leveraging its campaigns and promotions during the Spring and Summer months. By crafting compelling social media content, they can capture the attention of their audience and drive engagement. Social media content can include:
+
+- Photos and videos showcasing scenic bike routes or beautiful destinations that can be reached by bike
+- Tips and tricks on how to choose the right bike for casual rides or how to maintain your bike
+- Inspiring stories of people who have taken up cycling as a hobby and how it has positively impacted their lives
+- Interactive challenges or contests that encourage people to share their biking experiences or participate in group rides.
 
 2. Weekend packages
-With a lot of casual ridership occuring on the weekend. I would recommend promoting packages with local businesses to explore the beautiful city of Chicago. Most casual riders ride for a longer duration and ride during the weekends for leisure. These packages could include:
+
+To cater to the needs of casual riders who enjoy leisurely bike rides on weekends, it would be beneficial to promote packages that offer partnerships with local businesses to explore the stunning city of Chicago. These packages could be tailored to the preferences of riders who typically ride for extended periods. These packages could include:
+
 - Coffee shop tours
 - Musuem visits
 - Guided tours
 - Food tour
-It would be essential to leverage tourism and bike riding to really maximize the growth of the company and gain more annual members. This is a unique and fun experience that many casual riders could take part in.
+
+To optimize the company's growth and draw in more annual members, it's imperative to tap into the potential of tourism and bike riding. This exclusive and delightful experience can attract casual riders looking for something unique to try. The marketing team should focus on leveraging social media engagement and collaboration with local businesses
 
 
 
