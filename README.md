@@ -5,14 +5,15 @@ Cyclistic bike share case study: Exploring differences in ridership
 ### Introduction
 Cyclistic is a bike-share company in Chicago that has a fleet of 5,824 bicycles and 692 stations across the city. The company offers a flexible pricing plan that includes single-ride passes, full-day passes, and annual memberships. Cyclistic's finance analysts have determined that annual members are more profitable than casual riders, and the director of marketing, Lily Moreno, believes that maximizing the number of annual memberships is key to the company's future growth.
 
-**Business Task: Analyze the historical bike trip data to understand how annual members and casual riders use Cyclistic bikes differently. 
+**Business Task: Analyze the historical bike trip data to understand how annual members and casual riders use Cyclistic bikes differently**
 
-Defining the problem
+### Defining the problem
+
 To achieve the goal of converting casual riders into annual members, Moreno's team needs to understand why casual riders would buy a membership and how digital media can influence their decision-making process. The team will use the insights gained from analyzing the historical bike trip data to identify trends and develop strategies that target the needs and preferences of casual riders.
 
 The success of Cyclistic's future growth depends on maximizing the number of annual memberships. My role as a junior data analyst in the marketing analytics team is crucial in helping Cyclistic achieve this goal by providing data-driven insights and recommendations that will be used to design a new marketing strategy aimed at converting casual riders into annual members.
 
-Bike data is provided by Motivate International Inc.
+Data Source: Bike data is provided by [Motivate International Inc.](https://divvy-tripdata.s3.amazonaws.com/index.html)
 
 ----
 ### Preparing and Cleaning Data
@@ -46,12 +47,178 @@ Create tables for each month and combine the tables into quarters for easier pro
 Querying rides per quarter
 After combining the months into Quarters, use the count function to determine how many distinct rides there were per quarter. 
 
-Casual vs. Annual members
-Create a nested query to perform a COUNTIF function to identify members with the values of ‘casual’ or ‘member’ and create an alias as casual_members or annual_members. Perform another COUNT function to determine total trips that members have taken. 
-Create an outer query to calculate the percentage of casual and annual members that make up the total trips per quarter. Use UNION ALL to combine results from different quarters together, creating a comprehensive statistics of riders and ORDER BY quarter.
+### Explore differences of casual vs. annual members
 
-Calculate average ride time of casual and annual membership riders
-Create queries to determine the average ride time per quarter of casual, annual, and all members. Use the TIMESTAMP_DIFF function to calculate the difference of ended_at from started_at to obtain the ride length in seconds. Use the WHERE clause to further filter for members that are ‘casual’ or ‘members’.
+**Percentage of casual riders vs. annual members**
+1. Create a nested query to perform a **COUNTIF** function to identify members with the values of ‘casual’ or ‘member’ and create an alias as casual_members or annual_members. Perform another **COUNT** function to determine total trips that members have taken. 
+2. Create an outer query to calculate the percentage of casual and annual members that make up the total trips per quarter. Use UNION ALL to combine results from different quarters together, creating a comprehensive statistics of riders and ORDER BY quarter.
 
-With that as a nested query, calculate the AVG ride length from the nested query and divide by 60 to obtain ride length in minutes. Repeat for each quarter.
+```
+(SELECT
+  'Q2-2022' AS quarter,
+  total_trips,
+  casual_members,
+  annual_members,
+  ROUND((casual_members/total_trips)*100) AS casual_member_percentage,
+  ROUND((annual_members/total_trips)*100) AS annual_member_percentage
+FROM
+(SELECT
+  COUNTIF(member_casual = 'casual') AS casual_members,
+  COUNTIF(member_casual = 'member') AS annual_members,
+  COUNT(ride_id) AS total_trips
+FROM
+  `projects-381620.tripdata.quarter_2`
+)
+)
+UNION ALL
+(SELECT
+  'Q3-2022' AS quarter,
+  total_trips,
+  casual_members,
+  annual_members,
+  ROUND((casual_members/total_trips)*100) AS casual_member_percentage,
+  ROUND((annual_members/total_trips)*100) AS annual_member_percentage
+FROM
+(SELECT
+  COUNTIF(member_casual = 'casual') AS casual_members,
+  COUNTIF(member_casual = 'member') AS annual_members,
+  COUNT(ride_id) AS total_trips
+FROM
+  `projects-381620.tripdata.quarter_3`
+)
+)
+UNION ALL
+(SELECT
+  'Q4-2022' AS quarter,
+  total_trips,
+  casual_members,
+  annual_members,
+  ROUND((casual_members/total_trips)*100) AS casual_member_percentage,
+  ROUND((annual_members/total_trips)*100) AS annual_member_percentage
+FROM
+(SELECT
+  COUNTIF(member_casual = 'casual') AS casual_members,
+  COUNTIF(member_casual = 'member') AS annual_members,
+  COUNT(ride_id) AS total_trips
+FROM
+  `projects-381620.tripdata.quarter_4`
+)
+)
+UNION ALL
+(SELECT
+  'Q1-2023' AS quarter,
+  total_trips,
+  casual_members,
+  annual_members,
+  ROUND((casual_members/total_trips)*100) AS casual_member_percentage,
+  ROUND((annual_members/total_trips)*100) AS annual_member_percentage
+FROM
+(SELECT
+  COUNTIF(member_casual = 'casual') AS casual_members,
+  COUNTIF(member_casual = 'member') AS annual_members,
+  COUNT(ride_id) AS total_trips
+FROM
+  `projects-381620.tripdata.quarter_1_2023`
+)
+)
+ORDER BY
+  quarter ASC
+
+```
+
+**Calculate average ride time of casual and annual membership riders**
+
+Create queries to determine the average ride time per quarter of casual, annual, and all members. 
+1. Use the **TIMESTAMP_DIFF** function to calculate the difference of ended_at from started_at to obtain the ride length in seconds. Use the WHERE clause to further filter for members that are ‘casual’ or ‘members’.
+2. With that as a nested query, calculate the AVG ride length from the nested query and divide by 60 to obtain ride length in minutes. Repeat for each quarter.
+3. Use **JOIN** to join tables together for a comprehensive average table for all four quarters
+
+```
+SELECT
+  Q2.membership_type,
+  Q2.average_ride_minutes AS Q2_22_avg,
+  Q3.average_ride_minutes AS Q3_22_avg,
+  Q4.average_ride_minutes AS Q4_22_avg,
+  Q1_23.average_ride_minutes AS Q1_23_avg
+FROM
+  `projects-381620.tripdata.average_rideQ2_22` AS Q2
+JOIN 
+  `projects-381620.tripdata.average_rideQ3_22` as Q3 ON
+Q2.membership_type = Q3.membership_type
+JOIN
+  `projects-381620.tripdata.average_rideQ4_22` AS Q4 ON
+Q2.membership_type = Q4.membership_type
+JOIN
+  `projects-381620.tripdata.average_rideQ1_23` AS Q1_23 ON
+Q2.membership_type = Q1_23.membership_type
+```
+
+**Peak days**
+Now that we know average ride time, which days do riders prefer the most? 
+
+```
+SELECT
+  day_of_week,
+  count(CASE WHEN member_casual = 'casual' THEN 1 ELSE null END) AS casual_members,
+  count(CASE WHEN member_casual = 'member' THEN 1 ELSE null END) AS annual_members
+FROM
+  (SELECT
+    member_casual,
+    CASE 
+    WHEN day_of_week = 1 THEN 'Sunday'
+    WHEN day_of_week = 2 THEN 'Monday'
+    WHEN day_of_week = 3 THEN 'Tuesday'
+    WHEN day_of_week = 4 THEN 'Wednesday'
+    WHEN day_of_week = 5 THEN 'Thursday'
+    WHEN day_of_week = 6 THEN 'Friday'
+    WHEN day_of_week = 7 THEN 'Saturday'
+    END AS day_of_week
+  FROM
+    `projects-381620.tripdata.quarter_2`
+  )
+GROUP BY
+  day_of_week 
+ORDER BY
+CASE
+    WHEN day_of_week = 'Sunday' THEN 1
+    WHEN day_of_week = 'Monday' THEN 2
+    WHEN day_of_week = 'Tuesday' THEN 3
+    WHEN day_of_week = 'Wednesday' THEN 4
+    WHEN day_of_week = 'Thursday' THEN 5
+    WHEN day_of_week = 'Friday' THEN 6
+    WHEN day_of_week = 'Saturday' THEN 7
+    END ASC
+   ```
+   
+ > Note: Repeat for each quarter
+
+### Insights 
+After further analysis, insights and recommendations can be provided. Revisiting the business task: How do annual members and casual riders use Cyclistic bikes differently?
+
+
+- There is a peak in casual riders who use Cyclistic bikeshare during Spring and Summer months (Q2-Q3)
+- Casual riders increased 20% during these Spring and Summer months
+- Annual members peaked during Fall and Winter months (Q4-Q1)
+- Casual riders typically had a ride length greater than annual members
+- Casual riders peak during Thursday-Sunday
+- Annual riders peak during Monday-Thursday
+
+### Recommendations
+
+1. Spring/Summer promotion
+I would recommend Cyclistic to really leverage their campaigns and promotional activities during Spring and Summer months to attract the interest of casual riders. It would be wise to utilize social media to create engaging content that will appeal to casual riders. Social media content can include:
+ - The many benefits of bike sharing 
+ - Health outcomes
+ - Cyclisitc challenges and group activities
+ - Discounted prices
+
+2. Weekend packages
+With a lot of casual ridership occuring on the weekend. I would recommend promoting packages with local businesses to explore the beautiful city of Chicago. Most casual riders ride for a longer duration and ride during the weekends for leisure. These packages could include:
+- Coffee shop tours
+- Musuem visits
+- Guided tours
+- Food tour
+It would be essential to leverage tourism and bike riding to really maximize the growth of the company and gain more annual members. This is a unique and fun experience that many casual riders could take part in.
+
+
 
