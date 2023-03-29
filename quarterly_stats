@@ -1,0 +1,70 @@
+-- calculating total trips from casual vs annual members
+(SELECT
+  'Q2-2022' AS quarter,
+  total_trips,
+  casual_members,
+  annual_members,
+  ROUND((casual_members/total_trips)*100) AS casual_member_percentage,
+  ROUND((annual_members/total_trips)*100) AS annual_member_percentage
+FROM
+(SELECT
+  COUNTIF(member_casual = 'casual') AS casual_members,
+  COUNTIF(member_casual = 'member') AS annual_members,
+  COUNT(ride_id) AS total_trips
+FROM
+  `projects-381620.tripdata.quarter_2`
+)
+)
+UNION ALL
+(SELECT
+  'Q3-2022' AS quarter,
+  total_trips,
+  casual_members,
+  annual_members,
+  ROUND((casual_members/total_trips)*100) AS casual_member_percentage,
+  ROUND((annual_members/total_trips)*100) AS annual_member_percentage
+FROM
+(SELECT
+  COUNTIF(member_casual = 'casual') AS casual_members,
+  COUNTIF(member_casual = 'member') AS annual_members,
+  COUNT(ride_id) AS total_trips
+FROM
+  `projects-381620.tripdata.quarter_3`
+)
+)
+UNION ALL
+(SELECT
+  'Q4-2022' AS quarter,
+  total_trips,
+  casual_members,
+  annual_members,
+  ROUND((casual_members/total_trips)*100) AS casual_member_percentage,
+  ROUND((annual_members/total_trips)*100) AS annual_member_percentage
+FROM
+(SELECT
+  COUNTIF(member_casual = 'casual') AS casual_members,
+  COUNTIF(member_casual = 'member') AS annual_members,
+  COUNT(ride_id) AS total_trips
+FROM
+  `projects-381620.tripdata.quarter_4`
+)
+)
+UNION ALL
+(SELECT
+  'Q1-2023' AS quarter,
+  total_trips,
+  casual_members,
+  annual_members,
+  ROUND((casual_members/total_trips)*100) AS casual_member_percentage,
+  ROUND((annual_members/total_trips)*100) AS annual_member_percentage
+FROM
+(SELECT
+  COUNTIF(member_casual = 'casual') AS casual_members,
+  COUNTIF(member_casual = 'member') AS annual_members,
+  COUNT(ride_id) AS total_trips
+FROM
+  `projects-381620.tripdata.quarter_1_2023`
+)
+)
+ORDER BY
+  quarter ASC
