@@ -1,0 +1,19 @@
+-- Joining tables containing average ride length for members
+
+SELECT
+  Q2.membership_type,
+  Q2.average_ride_minutes AS Q2_22_avg,
+  Q3.average_ride_minutes AS Q3_22_avg,
+  Q4.average_ride_minutes AS Q4_22_avg,
+  Q1_23.average_ride_minutes AS Q1_23_avg
+FROM
+  `projects-381620.tripdata.average_rideQ2_22` AS Q2
+JOIN 
+  `projects-381620.tripdata.average_rideQ3_22` as Q3 ON
+Q2.membership_type = Q3.membership_type
+JOIN
+  `projects-381620.tripdata.average_rideQ4_22` AS Q4 ON
+Q2.membership_type = Q4.membership_type
+JOIN
+  `projects-381620.tripdata.average_rideQ1_23` AS Q1_23 ON
+Q2.membership_type = Q1_23.membership_type
