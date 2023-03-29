@@ -1,0 +1,120 @@
+-- popular start stations casual vs. members
+
+(SELECT
+  'Q2-2022' AS quarter,
+  start_station_name,
+  count(start_station_id) AS popular_casual_start_station
+FROM
+  `projects-381620.tripdata.quarter_2`
+WHERE
+  member_casual = 'casual'
+GROUP BY
+  start_station_name
+ORDER BY
+  popular_casual_start_station DESC
+LIMIT 1)
+UNION ALL
+(SELECT
+  'Q3-2022' AS quarter,
+  start_station_name,
+  count(start_station_id) AS popular_casual_start_station
+FROM
+  `projects-381620.tripdata.quarter_3`
+WHERE
+  member_casual = 'casual'
+GROUP BY
+  start_station_name
+ORDER BY
+  popular_casual_start_station DESC
+LIMIT 1)
+UNION ALL
+(SELECT
+  'Q4-2022' AS quarter,
+  start_station_name,
+  count(start_station_id) AS popular_casual_start_station
+FROM
+  `projects-381620.tripdata.quarter_4`
+WHERE
+  member_casual = 'casual'
+GROUP BY
+  start_station_name
+ORDER BY
+  popular_casual_start_station DESC
+LIMIT 1)
+UNION ALL
+(SELECT
+  'Q1-2023' AS quarter,
+  start_station_name,
+  count(start_station_id) AS popular_casual_start_station
+FROM
+  `projects-381620.tripdata.quarter_1_2023`
+WHERE
+  member_casual = 'casual'
+GROUP BY
+  start_station_name
+ORDER BY
+  popular_casual_start_station DESC
+LIMIT 1)
+
+ORDER BY
+  quarter
+----
+
+(SELECT
+  'Q2-2022' AS quarter,
+  start_station_name,
+  count(start_station_id) AS popular_member_start_station
+FROM
+  `projects-381620.tripdata.quarter_2`
+WHERE
+  member_casual = 'member'
+GROUP BY
+  start_station_name
+ORDER BY
+  popular_member_start_station DESC
+LIMIT 1)
+UNION ALL
+(SELECT
+  'Q3-2022' AS quarter,
+  start_station_name,
+  count(start_station_id) AS popular_member_start_station
+FROM
+  `projects-381620.tripdata.quarter_3`
+WHERE
+  member_casual = 'member'
+GROUP BY
+  start_station_name
+ORDER BY
+  popular_member_start_station DESC
+LIMIT 1)
+UNION ALL
+(SELECT
+  'Q4-2022' AS quarter,
+  start_station_name,
+  count(start_station_id) AS popular_member_start_station
+FROM
+  `projects-381620.tripdata.quarter_4`
+WHERE
+  member_casual = 'member'
+GROUP BY
+  start_station_name
+ORDER BY
+  popular_member_start_station DESC
+LIMIT 1)
+UNION ALL
+(SELECT
+  'Q1-2023' AS quarter,
+  start_station_name,
+  count(start_station_id) AS popular_member_start_station
+FROM
+  `projects-381620.tripdata.quarter_1_2023`
+WHERE
+  member_casual = 'member'
+GROUP BY
+  start_station_name
+ORDER BY
+  popular_member_start_station DESC
+LIMIT 1)
+
+ORDER BY
+  quarter
